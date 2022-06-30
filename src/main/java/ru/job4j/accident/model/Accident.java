@@ -17,14 +17,7 @@ public class Accident {
     private String text;
     private String address;
 
-    public static Accident of(int id, String name, String text, String address) {
-        Accident accident = new Accident();
-        accident.id = id;
-        accident.name = name;
-        accident.text = text;
-        accident.address = address;
-        return accident;
-    }
+    private AccidentType type;
 
     @Override
     public boolean equals(Object o) {

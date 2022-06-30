@@ -30,6 +30,7 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Address</th>
+                <th>Type</th>
                 <th></th>
             </tr>
             </thead>
@@ -38,6 +39,7 @@
                 <td th:text="${accident.name}"></td>
                 <td th:text="${accident.text}"></td>
                 <td th:text="${accident.address}"></td>
+                <td th:text="${accident.type.name}"></td>
                 <td style="width: 4%">
                     <button class="btn btn-link">
                         <a th:href="@{/update/(id=${accident.id})}">
