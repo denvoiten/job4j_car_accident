@@ -2,9 +2,7 @@ package ru.job4j.accident.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.service.AccidentService;
 
@@ -36,6 +34,18 @@ public class IndexControl {
     @PostMapping("createAccident")
     public String create(@ModelAttribute Accident accident) {
         accidentService.add(accident);
+        return "redirect:/";
+    }
+
+    @GetMapping("/update")
+    public String update(@RequestParam("id") Integer id, Model model) {
+        model.addAttribute("accident", accidentService.findById(id));
+        return "update";
+    }
+
+    @PostMapping("/updateAccident")
+    public String updateAccident(@ModelAttribute Accident accident) {
+        accidentService.update(accident);
         return "redirect:/";
     }
 }

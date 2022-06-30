@@ -18,8 +18,16 @@ public class AccidentMem {
         return accidents.values();
     }
 
+    public Accident findById(int id) {
+        return accidents.get(id);
+    }
+
     public void add(Accident accident) {
         accident.setId(id.incrementAndGet());
         accidents.putIfAbsent(accident.getId(), accident);
+    }
+
+    public void update(Accident accident) {
+        accidents.replace(accident.getId(), accident);
     }
 }
