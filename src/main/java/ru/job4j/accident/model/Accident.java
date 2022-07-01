@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,6 +19,7 @@ public class Accident {
     private String address;
 
     private AccidentType type;
+    private Set<Rule> rules;
 
     @Override
     public boolean equals(Object o) {

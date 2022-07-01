@@ -7,17 +7,23 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.accident.model.Accident;
+import ru.job4j.accident.service.AccidentRuleService;
 import ru.job4j.accident.service.AccidentService;
 import ru.job4j.accident.service.AccidentTypeService;
+
+import java.util.Set;
 
 @Controller
 public class IndexControl {
     private final AccidentService accidentService;
     private final AccidentTypeService accidentTypeService;
 
-    public IndexControl(AccidentService accidentService, AccidentTypeService accidentTypeService) {
+    private final AccidentRuleService accidentRuleService;
+
+    public IndexControl(AccidentService accidentService, AccidentTypeService accidentTypeService, AccidentRuleService accidentRuleService) {
         this.accidentService = accidentService;
         this.accidentTypeService = accidentTypeService;
+        this.accidentRuleService = accidentRuleService;
     }
 
     @GetMapping("/")
@@ -29,18 +35,23 @@ public class IndexControl {
     public String index(Model model) {
         model.addAttribute("accidents", accidentService.getAll());
         model.addAttribute("types", accidentTypeService.getTypes());
+        model.addAttribute("rules", accidentRuleService.getRules());
         return "index";
     }
 
     @GetMapping("/addAccident")
     public String add(Model model) {
         model.addAttribute("types", accidentTypeService.getTypes());
+        model.addAttribute("rules", accidentRuleService.getRules());
         return "addAccident";
     }
 
     @PostMapping("createAccident")
-    public String create(@ModelAttribute Accident accident, @RequestParam("typeID") int id) {
+    public String create(@ModelAttribute Accident accident,
+                         @RequestParam("typeID") int id,
+                         @RequestParam("ruleID") Set<Integer> ruleIds) {
         accident.setType(accidentTypeService.findById(id));
+        accident.setRules(accidentRuleService.getRulesAccident(ruleIds));
         accidentService.add(accident);
         return "redirect:/";
     }

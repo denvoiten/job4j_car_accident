@@ -31,6 +31,7 @@
                 <th>Description</th>
                 <th>Address</th>
                 <th>Type</th>
+                <th>Rule</th>
                 <th></th>
             </tr>
             </thead>
@@ -40,6 +41,9 @@
                 <td th:text="${accident.text}"></td>
                 <td th:text="${accident.address}"></td>
                 <td th:text="${accident.type.name}"></td>
+                <td>
+                    <p th:each="rule: ${accident.rules}" th:text="${rule.name}"></p>
+                </td>
                 <td style="width: 4%">
                     <button class="btn btn-link">
                         <a th:href="@{/update/(id=${accident.id})}">

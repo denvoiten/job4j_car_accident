@@ -55,6 +55,14 @@
                                 </option>
                             </select>
                         </label>
+                        <label for="rule.id" class="col">Select type
+                            <select class="form-control" id="rule.id" name="ruleID" multiple required>
+                                <option th:each="rule : ${rules}"
+                                        th:value="${rule.id}"
+                                        th:text="${rule.name}">
+                                </option>
+                            </select>
+                        </label>
                     </div>
                     <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
                 </form>
