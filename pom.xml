@@ -14,6 +14,7 @@
     <groupId>ru.job4j</groupId>
     <artifactId>car_accident</artifactId>
     <version>1.0</version>
+    <packaging>war</packaging>
 
     <name>car_accident</name>
 
