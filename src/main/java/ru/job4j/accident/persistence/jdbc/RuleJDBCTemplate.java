@@ -1,12 +1,10 @@
 package ru.job4j.accident.persistence.jdbc;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 import ru.job4j.accident.model.Rule;
 
 import java.util.Collection;
 
-@Repository
 public class RuleJDBCTemplate {
     private final JdbcTemplate jdbc;
 

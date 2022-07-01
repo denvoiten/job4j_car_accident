@@ -3,7 +3,6 @@ package ru.job4j.accident.persistence.jdbc;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.AccidentType;
 import ru.job4j.accident.model.Rule;
@@ -12,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.util.Collection;
 import java.util.Set;
 
-@Repository
 public class AccidentJdbcTemplate {
     private final JdbcTemplate jdbc;
 
