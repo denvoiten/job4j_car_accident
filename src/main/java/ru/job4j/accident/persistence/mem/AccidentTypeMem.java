@@ -1,13 +1,12 @@
 package ru.job4j.accident.persistence.mem;
 
-import org.springframework.stereotype.Repository;
 import ru.job4j.accident.model.AccidentType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Repository
 public class AccidentTypeMem {
     private final Map<Integer, AccidentType> types = new ConcurrentHashMap<>();
 

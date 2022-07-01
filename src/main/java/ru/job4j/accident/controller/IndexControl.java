@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.accident.model.Accident;
 import ru.job4j.accident.model.Rule;
-import ru.job4j.accident.service.AccidentRuleService;
-import ru.job4j.accident.service.AccidentService;
-import ru.job4j.accident.service.AccidentTypeService;
+import ru.job4j.accident.service.AccidentServiceData;
+import ru.job4j.accident.service.RuleServiceData;
+import ru.job4j.accident.service.TypeServiceData;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -20,17 +20,16 @@ public class IndexControl {
     private static final String REDIRECT = "redirect:/";
     private static final String TYPES = "types";
     private static final String RULES = "rules";
-    private final AccidentService accidentService;
-    private final AccidentTypeService accidentTypeService;
+    private final AccidentServiceData accidentServiceData;
+    private final RuleServiceData ruleServiceData;
+    private final TypeServiceData typeServiceData;
 
-    private final AccidentRuleService accidentRuleService;
-
-    public IndexControl(AccidentService accidentService,
-                        AccidentTypeService accidentTypeService,
-                        AccidentRuleService accidentRuleService) {
-        this.accidentService = accidentService;
-        this.accidentTypeService = accidentTypeService;
-        this.accidentRuleService = accidentRuleService;
+    public IndexControl(AccidentServiceData accidentServiceData,
+                        RuleServiceData ruleServiceData,
+                        TypeServiceData typeServiceData) {
+        this.accidentServiceData = accidentServiceData;
+        this.ruleServiceData = ruleServiceData;
+        this.typeServiceData = typeServiceData;
     }
 
     @GetMapping("/")
@@ -40,16 +39,16 @@ public class IndexControl {
 
     @GetMapping("/accident")
     public String index(Model model) {
-        model.addAttribute("accidents", accidentService.getAll());
-        model.addAttribute(TYPES, accidentTypeService.getTypes());
-        model.addAttribute(RULES, accidentRuleService.getRules());
+        model.addAttribute("accidents", accidentServiceData.findAll());
+        model.addAttribute(TYPES, typeServiceData.findAll());
+        model.addAttribute(RULES, ruleServiceData.findAll());
         return "index";
     }
 
     @GetMapping("/addAccident")
     public String add(Model model) {
-        model.addAttribute(TYPES, accidentTypeService.getTypes());
-        model.addAttribute(RULES, accidentRuleService.getRules());
+        model.addAttribute(TYPES, typeServiceData.findAll());
+        model.addAttribute(RULES, ruleServiceData.findAll());
         return "addAccident";
     }
 
@@ -57,19 +56,19 @@ public class IndexControl {
     public String create(@ModelAttribute Accident accident,
                          @RequestParam("typeID") int id,
                          @RequestParam("ruleID") Set<Integer> ruleIds) {
-        accident.setType(accidentTypeService.findById(id));
+        typeServiceData.findById(id).ifPresent(accident::setType);
         Set<Rule> rules = new TreeSet<>();
-        ruleIds.forEach(i -> rules.add(accidentRuleService.findById(i)));
+        ruleIds.forEach(i -> rules.add(ruleServiceData.findById(i).orElse(new Rule())));
         accident.setRules(rules);
-        accidentService.add(accident);
+        accidentServiceData.add(accident);
         return REDIRECT;
     }
 
     @GetMapping("/update")
     public String update(@RequestParam("id") int id, Model model) {
-        model.addAttribute("accident", accidentService.findById(id));
-        model.addAttribute(TYPES, accidentTypeService.getTypes());
-        model.addAttribute(RULES, accidentRuleService.getRules());
+        model.addAttribute("accident", accidentServiceData.findById(id));
+        model.addAttribute(TYPES, typeServiceData.findAll());
+        model.addAttribute(RULES, ruleServiceData.findAll());
         return "update";
     }
 
@@ -77,17 +76,17 @@ public class IndexControl {
     public String updateAccident(@ModelAttribute Accident accident,
                                  @RequestParam("typeID") int id,
                                  @RequestParam("ruleID") Set<Integer> ruleIds) {
-        accident.setType(accidentTypeService.findById(id));
+        typeServiceData.findById(id).ifPresent(accident::setType);
         Set<Rule> rules = new TreeSet<>();
-        ruleIds.forEach(i -> rules.add(accidentRuleService.findById(i)));
+        ruleIds.forEach(i -> rules.add(ruleServiceData.findById(i).orElse(new Rule())));
         accident.setRules(rules);
-        accidentService.update(accident);
+        accidentServiceData.add(accident);
         return REDIRECT;
     }
 
     @GetMapping("/delete")
-    public String delete(@RequestParam("id") int id) {
-        accidentService.delete(id);
+    public String delete(@ModelAttribute Accident accident) {
+        accidentServiceData.delete(accident);
         return REDIRECT;
     }
 }

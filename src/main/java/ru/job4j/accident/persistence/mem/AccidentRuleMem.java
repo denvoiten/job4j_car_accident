@@ -1,12 +1,10 @@
 package ru.job4j.accident.persistence.mem;
 
-import org.springframework.stereotype.Repository;
 import ru.job4j.accident.model.Rule;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Repository
 public class AccidentRuleMem {
 
     private final List<Rule> rules = Collections.synchronizedList(new ArrayList<>());

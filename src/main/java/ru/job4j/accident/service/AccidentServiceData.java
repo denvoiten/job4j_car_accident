@@ -7,14 +7,14 @@ import ru.job4j.accident.persistence.data.AccidentRepository;
 import java.util.Optional;
 
 @Service
-public class AccidentService {
+public class AccidentServiceData {
     private final AccidentRepository accidentRepository;
 
-    public AccidentService(AccidentRepository accidentRepository) {
+    public AccidentServiceData(AccidentRepository accidentRepository) {
         this.accidentRepository = accidentRepository;
     }
 
-    public Iterable<Accident> getAll() {
+    public Iterable<Accident> findAll() {
         return accidentRepository.findAll();
     }
 
