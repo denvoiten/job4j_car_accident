@@ -2,31 +2,35 @@ package ru.job4j.accident.service;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.accident.model.Accident;
-import ru.job4j.accident.persistence.AccidentMem;
+import ru.job4j.accident.persistence.jdbc.AccidentJdbcTemplate;
 
 import java.util.Collection;
 
 @Service
 public class AccidentService {
-    private final AccidentMem accidentMem;
+    private final AccidentJdbcTemplate accidentJdbcTemplate;
 
-    public AccidentService(AccidentMem accidentMem) {
-        this.accidentMem = accidentMem;
+    public AccidentService(AccidentJdbcTemplate accidentJdbcTemplate) {
+        this.accidentJdbcTemplate = accidentJdbcTemplate;
     }
 
     public Collection<Accident> getAll() {
-        return accidentMem.getAll();
+        return accidentJdbcTemplate.getAll();
     }
 
     public void add(Accident accident) {
-        accidentMem.add(accident);
+        accidentJdbcTemplate.add(accident);
     }
 
     public Accident findById(int id) {
-        return accidentMem.findById(id);
+        return accidentJdbcTemplate.findById(id);
     }
 
     public void update(Accident accident) {
-        accidentMem.update(accident);
+        accidentJdbcTemplate.update(accident);
+    }
+
+    public void delete(int id) {
+        accidentJdbcTemplate.delete(id);
     }
 }

@@ -33,6 +33,7 @@
                 <th>Type</th>
                 <th>Rule</th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tr th:each="accident: ${accidents}">
@@ -44,10 +45,17 @@
                 <td>
                     <p th:each="rule: ${accident.rules}" th:text="${rule.name}"></p>
                 </td>
-                <td style="width: 4%">
+                <td style="width: 2%">
                     <button class="btn btn-link">
                         <a th:href="@{/update/(id=${accident.id})}">
                             <i class="fa fa-edit"></i>
+                        </a>
+                    </button>
+                </td>
+                <td style="width: 2%">
+                    <button class="btn btn-link">
+                        <a th:href="@{/delete/(id=${accident.id})}">
+                            <i class="fa fa-trash"></i>
                         </a>
                     </button>
                 </td>

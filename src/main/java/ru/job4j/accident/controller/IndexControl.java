@@ -2,26 +2,28 @@ package ru.job4j.accident.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.job4j.accident.model.Accident;
+import ru.job4j.accident.model.Rule;
+import ru.job4j.accident.persistence.jdbc.AccidentJdbcTemplate;
 import ru.job4j.accident.service.AccidentRuleService;
-import ru.job4j.accident.service.AccidentService;
 import ru.job4j.accident.service.AccidentTypeService;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 @Controller
 public class IndexControl {
-    private final AccidentService accidentService;
+    private static final String REDIRECT = "redirect:/";
+    private static final String TYPES = "types";
+    private static final String RULES = "rules";
+    private final AccidentJdbcTemplate accidentJdbcTemplate;
     private final AccidentTypeService accidentTypeService;
 
     private final AccidentRuleService accidentRuleService;
 
-    public IndexControl(AccidentService accidentService, AccidentTypeService accidentTypeService, AccidentRuleService accidentRuleService) {
-        this.accidentService = accidentService;
+    public IndexControl(AccidentJdbcTemplate accidentJdbcTemplate, AccidentTypeService accidentTypeService, AccidentRuleService accidentRuleService) {
+        this.accidentJdbcTemplate = accidentJdbcTemplate;
         this.accidentTypeService = accidentTypeService;
         this.accidentRuleService = accidentRuleService;
     }
@@ -33,16 +35,16 @@ public class IndexControl {
 
     @GetMapping("/accident")
     public String index(Model model) {
-        model.addAttribute("accidents", accidentService.getAll());
-        model.addAttribute("types", accidentTypeService.getTypes());
-        model.addAttribute("rules", accidentRuleService.getRules());
+        model.addAttribute("accidents", accidentJdbcTemplate.getAll());
+        model.addAttribute(TYPES, accidentTypeService.getTypes());
+        model.addAttribute(RULES, accidentRuleService.getRules());
         return "index";
     }
 
     @GetMapping("/addAccident")
     public String add(Model model) {
-        model.addAttribute("types", accidentTypeService.getTypes());
-        model.addAttribute("rules", accidentRuleService.getRules());
+        model.addAttribute(TYPES, accidentTypeService.getTypes());
+        model.addAttribute(RULES, accidentRuleService.getRules());
         return "addAccident";
     }
 
@@ -51,22 +53,36 @@ public class IndexControl {
                          @RequestParam("typeID") int id,
                          @RequestParam("ruleID") Set<Integer> ruleIds) {
         accident.setType(accidentTypeService.findById(id));
-        accident.setRules(accidentRuleService.getRulesAccident(ruleIds));
-        accidentService.add(accident);
-        return "redirect:/";
+        Set<Rule> rules = new TreeSet<>();
+        ruleIds.forEach(i -> rules.add(accidentRuleService.findById(i)));
+        accident.setRules(rules);
+        accidentJdbcTemplate.add(accident);
+        return REDIRECT;
     }
 
     @GetMapping("/update")
-    public String update(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("accident", accidentService.findById(id));
-        model.addAttribute("types", accidentTypeService.getTypes());
+    public String update(@RequestParam("id") int id, Model model) {
+        model.addAttribute("accident", accidentJdbcTemplate.findById(id));
+        model.addAttribute(TYPES, accidentTypeService.getTypes());
+        model.addAttribute(RULES, accidentRuleService.getRules());
         return "update";
     }
 
     @PostMapping("/updateAccident")
-    public String updateAccident(@ModelAttribute Accident accident, @RequestParam("typeID") int id) {
+    public String updateAccident(@ModelAttribute Accident accident,
+                                 @RequestParam("typeID") int id,
+                                 @RequestParam("ruleID") Set<Integer> ruleIds) {
         accident.setType(accidentTypeService.findById(id));
-        accidentService.update(accident);
-        return "redirect:/";
+        Set<Rule> rules = new TreeSet<>();
+        ruleIds.forEach(i -> rules.add(accidentRuleService.findById(i)));
+        accident.setRules(rules);
+        accidentJdbcTemplate.update(accident);
+        return REDIRECT;
+    }
+
+    @GetMapping("/delete")
+    public String delete(@RequestParam("id") int id) {
+        accidentJdbcTemplate.delete(id);
+        return REDIRECT;
     }
 }

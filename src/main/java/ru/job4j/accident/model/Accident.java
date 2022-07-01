@@ -21,6 +21,17 @@ public class Accident {
     private AccidentType type;
     private Set<Rule> rules;
 
+    public static Accident of(int id, String name, String text, String address, AccidentType type, Set<Rule> rules) {
+        Accident accident = new Accident();
+        accident.id = id;
+        accident.name = name;
+        accident.text = text;
+        accident.address = address;
+        accident.type = type;
+        accident.rules = rules;
+        return accident;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

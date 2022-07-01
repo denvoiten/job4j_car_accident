@@ -1,4 +1,4 @@
-package ru.job4j.accident.persistence;
+package ru.job4j.accident.persistence.mem;
 
 import org.springframework.stereotype.Repository;
 import ru.job4j.accident.model.Accident;
