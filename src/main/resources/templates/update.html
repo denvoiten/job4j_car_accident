@@ -28,7 +28,7 @@
                 New accident
             </div>
             <div class="card-body">
-                <form th:action="@{/updateAccident}" method="POST">
+                <form th:action="@{/createAccident}" method="POST">
                     <input type="hidden" name="id" th:field="*{accident.id}"/>
                     <div class="form-group">
                         <div class="row">

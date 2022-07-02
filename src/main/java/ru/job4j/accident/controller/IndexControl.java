@@ -1,5 +1,6 @@
 package ru.job4j.accident.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,7 @@ public class IndexControl {
 
     @GetMapping("/accident")
     public String index(Model model) {
+        model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         model.addAttribute("accidents", accidentServiceData.findAll());
         model.addAttribute(TYPES, typeServiceData.findAll());
         model.addAttribute(RULES, ruleServiceData.findAll());
@@ -70,18 +72,6 @@ public class IndexControl {
         model.addAttribute(TYPES, typeServiceData.findAll());
         model.addAttribute(RULES, ruleServiceData.findAll());
         return "update";
-    }
-
-    @PostMapping("/updateAccident")
-    public String updateAccident(@ModelAttribute Accident accident,
-                                 @RequestParam("typeID") int id,
-                                 @RequestParam("ruleID") Set<Integer> ruleIds) {
-        typeServiceData.findById(id).ifPresent(accident::setType);
-        Set<Rule> rules = new TreeSet<>();
-        ruleIds.forEach(i -> rules.add(ruleServiceData.findById(i).orElse(new Rule())));
-        accident.setRules(rules);
-        accidentServiceData.add(accident);
-        return REDIRECT;
     }
 
     @GetMapping("/delete")
