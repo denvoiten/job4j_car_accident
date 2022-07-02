@@ -1,5 +1,6 @@
 package ru.job4j.accident.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,14 +9,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.accident.model.Accident;
-import ru.job4j.accident.model.Rule;
 import ru.job4j.accident.service.AccidentServiceData;
 import ru.job4j.accident.service.RuleServiceData;
 import ru.job4j.accident.service.TypeServiceData;
 
 import java.util.Set;
-import java.util.TreeSet;
 
+@RequiredArgsConstructor
 @Controller
 public class IndexControl {
     private static final String REDIRECT = "redirect:/";
@@ -24,14 +24,6 @@ public class IndexControl {
     private final AccidentServiceData accidentServiceData;
     private final RuleServiceData ruleServiceData;
     private final TypeServiceData typeServiceData;
-
-    public IndexControl(AccidentServiceData accidentServiceData,
-                        RuleServiceData ruleServiceData,
-                        TypeServiceData typeServiceData) {
-        this.accidentServiceData = accidentServiceData;
-        this.ruleServiceData = ruleServiceData;
-        this.typeServiceData = typeServiceData;
-    }
 
     @GetMapping("/")
     public String empty() {
@@ -59,9 +51,7 @@ public class IndexControl {
                          @RequestParam("typeID") int id,
                          @RequestParam("ruleID") Set<Integer> ruleIds) {
         typeServiceData.findById(id).ifPresent(accident::setType);
-        Set<Rule> rules = new TreeSet<>();
-        ruleIds.forEach(i -> rules.add(ruleServiceData.findById(i).orElse(new Rule())));
-        accident.setRules(rules);
+        accident.setRules(ruleServiceData.getRules(ruleIds));
         accidentServiceData.add(accident);
         return REDIRECT;
     }
