@@ -21,8 +21,8 @@ public class AccidentRuleMem {
         return rules.get(id);
     }
 
-    public Map<Integer, Rule> getRules() {
-        return rules;
+    public Collection<Rule> getRules() {
+        return rules.values();
     }
 
     public Set<Rule> getRulesAccident(Set<Integer> rulesID) {
