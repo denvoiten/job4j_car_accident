@@ -15,11 +15,9 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     @Bean
-    public static PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -33,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usersByUsernameQuery("select username, password, enabled "
                         + "from users "
                         + "where username = ?")
+                .passwordEncoder(new BCryptPasswordEncoder())
                 .authoritiesByUsernameQuery("select u.username, a.authority "
                         + "from authorities as a, users as u "
                         + "where u.username = ? and u.authority_id = a.id");
