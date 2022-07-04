@@ -1,5 +1,6 @@
 package ru.job4j.accident.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.accident.model.Rule;
 import ru.job4j.accident.persistence.data.RuleRepository;
@@ -8,13 +9,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+@RequiredArgsConstructor
 @Service
 public class RuleServiceData {
     private final RuleRepository ruleRepository;
-
-    public RuleServiceData(RuleRepository ruleRepository) {
-        this.ruleRepository = ruleRepository;
-    }
 
     public Optional<Rule> findById(int id) {
         return ruleRepository.findById(id);

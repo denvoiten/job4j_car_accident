@@ -3,6 +3,7 @@ package ru.job4j.accident.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,13 @@ public class RegControl {
     private final AuthorityRepository authorities;
 
     @PostMapping("/reg")
-    public String regSave(@ModelAttribute User user) {
+    public String regSave(Model model,
+                          @ModelAttribute User user) {
+        if (users.findUserByUsername(user.getUsername()) != null) {
+            String errorMessage = "A user with this name is already registered";
+            model.addAttribute("errorMessage", errorMessage);
+            return "reg";
+        }
         user.setEnabled(true);
         user.setPassword(encoder.encode(user.getPassword()));
         user.setAuthority(authorities.findByAuthority("ROLE_USER"));
